@@ -4,46 +4,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Snake</title>
 </head>
 
 <body>
     <script>
-        // generate a board of 15 * 15 or 17 * 17
+        // generate a grid
         function createGrid(n) {
             let grid = []
             for (let i = 0; i < n; i++) {
                 grid.push([])
                 for (let j = 0; j < n; j++) {
-                grid[i].push(' ')
+                    grid[i].push(' ')
+                }
             }
-            }
+            // create snake
+            let gridWithSnake = createSnake(n)
             return grid
         }
 
         // place snake's body
-        function createSnake(n) {
+        function createSnakeCords(n) {
             //check size of grid to place head in the middle
-            
+            let headPosition = (n - 1) / 2
+            let snakeCooridnates = [[headPosition, headPosition], [headPosition + 1, headPosition], 
+                        [headPosition + 2, headPosition]]
+            return snakeCooridnates
+
         }
-            // - length of 3
+
+        // place snake on the grid
+        function placeSnakeOnGrid(grid, snakeCords) {
+            for (let i = 0; i < snakeCords.length; i++) {
+                grid[snakeCords[i][0]][snakeCords[i][1]] = "o"
+            }
+            return grid
+        }
 
         // place apple
+        function placeAppleOnGrid(grid, snakeCords) {
+            let sizeOfGrid = grid.length - 1 
+            let randomposition = randomPositionOnAGrid(sizeOfGrid)
+        }
+
+        // chose a random position on a grid
+        function randomPositionOnAGrid(n) {
+            let sizeOfGrid = grid.length - 1
+        }
 
         // display apple score
-            // also display high-score. This can be persisted with local storage
+        // also display high-score. This can be persisted with local storage
 
         // tick one step
-            // check for any arrow-keydown events
-            // check if snake is running into wall or own body -> end game
-            // check if snake got apple
-                // if got apple then add piece to snake's body and to apple score
+        // check for any arrow-keydown events
+        // check if snake is running into wall or own body -> end game
+        // check if snake got apple
+        // if got apple then add piece to snake's body and to apple score
 
         // when game is over display game over message with score and allow the user to press restart
 
         // display intro message when the game starts
 
         // different difficulty modes: eg. change speed, obstacles, etc.
+
+        function main() {
+            let n;
+            while (true) {
+                n = prompt("Input a number between 10 and 20, inclusive, to choose the size of grid: ")
+                if (n >= 10 && n <= 20) {
+                    break
+                }
+            }
+            let grid = createGrid(n)
+            let snakeCoordinates = createSnakeCords(n)
+            let gridWithSnake = placeSnakeOnGrid(grid, snakeCoordinates)
+            let gridWithSnakeAndApple = placeAppleOnGrid(gridWithSnake)
+
+
+        }
+
+        main()
     </script>
 </body>
 
