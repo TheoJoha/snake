@@ -18,8 +18,7 @@
                     grid[i].push(' ')
                 }
             }
-            // create snake
-            let gridWithSnake = createSnake(n)
+            
             return grid
         }
 
@@ -29,6 +28,7 @@
             let headPosition = (n - 1) / 2
             let snakeCooridnates = [[headPosition, headPosition], [headPosition + 1, headPosition], 
                         [headPosition + 2, headPosition]]
+            console.log(snakeCooridnates)
             return snakeCooridnates
 
         }
@@ -42,15 +42,25 @@
         }
 
         // place apple
-        function placeAppleOnGrid(grid, snakeCords) {
-            let sizeOfGrid = grid.length - 1 
-            let randomposition = randomPositionOnAGrid(sizeOfGrid)
+        function placeAppleOnGrid(grid) {
+            let sizeOfGrid = grid.length - 1
+            while (true) {
+                let randomposition = randomPositionOnAGrid(sizeOfGrid)
+                if (grid[randomposition[0]][randomposition[1]] == " ") {
+                    grid[randomposition[0]][randomposition[1]] = "a"
+                    return grid
+                }
+            }
         }
 
         // chose a random position on a grid
         function randomPositionOnAGrid(n) {
-            let sizeOfGrid = grid.length - 1
+            let x = Math.floor((Math.random() * n))
+            let y = Math.floor((Math.random() * n))
+            return [x, y]
         }
+
+        // change snake coords
 
         // display apple score
         // also display high-score. This can be persisted with local storage
@@ -70,8 +80,8 @@
         function main() {
             let n;
             while (true) {
-                n = prompt("Input a number between 10 and 20, inclusive, to choose the size of grid: ")
-                if (n >= 10 && n <= 20) {
+                n = prompt("Input an uneven number between 10 and 20, inclusive, to choose the size of grid: ")
+                if (n >= 10 && n <= 20 && n % 2 != 0) {
                     break
                 }
             }
@@ -79,6 +89,11 @@
             let snakeCoordinates = createSnakeCords(n)
             let gridWithSnake = placeSnakeOnGrid(grid, snakeCoordinates)
             let gridWithSnakeAndApple = placeAppleOnGrid(gridWithSnake)
+            console.log(gridWithSnakeAndApple)
+
+            /* let interval = setInterval(() => {
+
+            }, 1000) */
 
 
         }
