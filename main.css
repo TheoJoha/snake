@@ -15,4 +15,14 @@ button {
 
 #restart-game {
     background-color: yellow;
+    width: 60px;
+    height: 40px;
+    border: solid black 2px;
+}
+
+#results {
+    background-color: orange;
+    width: 60px;
+    height: 40px;
+    border: solid black 2px;
 }

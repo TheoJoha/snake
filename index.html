@@ -13,14 +13,20 @@
     <div id="current-score-div">
         <p>Current score:</p>
         <p id="current-score"></p>
-        <div id="restart-game"><p>Restart Game</p></div>
+        <div id="restart-game">
+            <p>Start Game</p>
+        </div>
+        <div id="results">
+            <p id="results-paragraph">Results:</p>
+            <p id="results-paragraph"></p>
+        </div>
     </div>
     <div id="placement-div"></div>
     <script defer>
 
         // restart button
-        let restartButton = document.getElementById("restart-game")
-        restartButton.addEventListener("click", () => {
+        let startButton = document.getElementById("restart-game")
+        startButton.addEventListener("click", () => {
             main()
         })
 
@@ -121,7 +127,8 @@
 
         // end the game
         function endGame(numberOfApples) {
-            alert(`Game has ended! High-score: ${numberOfApples}`)
+            let resultsParagraph = document.getElementById("results-paragraph")
+            resultsParagraph.textContent = `Game has ended! Score: ${numberOfApples}`
         }
 
         // check which cell the snake's head will move to next
@@ -229,7 +236,7 @@
             }
         }
 
-        
+
 
         // also display high-score. This can be persisted with local storage
 
@@ -257,12 +264,9 @@
                     keyPressed = "down"
                 }
             })
-            while (true) {
-                n = prompt("Input an uneven number between 10 and 20, inclusive, to choose the size of grid: ")
-                if (n >= 10 && n <= 20 && n % 2 != 0) {
-                    break
-                }
-            }
+
+            n = 11
+
             let grid = createGrid(n)
             let snakeCoordinates = createSnakeCords(n)
             let gridWithSnake = placeSnakeOnGrid(grid, snakeCoordinates)
