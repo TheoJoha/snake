@@ -9,3 +9,10 @@ button {
     width: 30px;
 }
 
+#current-score-div {
+    display: flex;
+}
+
+#restart-game {
+    background-color: yellow;
+}

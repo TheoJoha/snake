@@ -10,11 +10,20 @@
 
 <body>
     <h1>SNAKE</h1>
-    <div>
+    <div id="current-score-div">
         <p>Current score:</p>
         <p id="current-score"></p>
+        <div id="restart-game"><p>Restart Game</p></div>
     </div>
-    <script>
+    <div id="placement-div"></div>
+    <script defer>
+
+        // restart button
+        let restartButton = document.getElementById("restart-game")
+        restartButton.addEventListener("click", () => {
+            main()
+        })
+
 
         // generate a grid
         function createGrid(n) {
@@ -90,6 +99,7 @@
             return newSnakeCoordinates
         }
 
+        // add one point if next is an apple
         function appleCounter(nextHeadPosition, gridWithSnakeAndApple, numberOfApples) {
             if (gridWithSnakeAndApple[nextHeadPosition[0]][nextHeadPosition[1]] == 'a') {
                 console.log(numberOfApples + 1)
@@ -101,6 +111,7 @@
             return numberOfApples
         }
 
+        // check if next cell is an apple
         function checkIfNextIsApple(nextHeadPosition, gridWithSnakeAndApple) {
             if (gridWithSnakeAndApple[nextHeadPosition[0]][nextHeadPosition[1]] == 'a') {
                 return true
@@ -108,10 +119,12 @@
             return false
         }
 
+        // end the game
         function endGame(numberOfApples) {
             alert(`Game has ended! High-score: ${numberOfApples}`)
         }
 
+        // check which cell the snake's head will move to next
         function checkNextHeadPosition(gridWithSnakeAndApple, snakeCoordinates, keyPressed) {
             console.log(keyPressed)
             let nextHead;
@@ -168,6 +181,7 @@
             }
         }
 
+        // check if the next head position is an allowed position
         function checkIfNextHeadPositionIsValid(nextHeadPosition, gridWithSnakeAndApple) {
             if (nextHeadPosition[0] < 0 || nextHeadPosition[0] > gridWithSnakeAndApple.length - 1 ||
                 nextHeadPosition[1] < 0 || nextHeadPosition[1] > gridWithSnakeAndApple.length - 1) {
@@ -180,11 +194,12 @@
 
         }
 
+        // render the grid in gthe DOM
         function constructGridInDOM(grid) {
-            let body = document.querySelector("body")
+            let div = document.getElementById("placement-div")
             for (let i = 0; i < grid.length; i++) {
                 let outerDiv = document.createElement("div")
-                body.appendChild(outerDiv)
+                div.appendChild(outerDiv)
                 for (let j = 0; j < grid.length; j++) {
                     let button = document.createElement("button")
                     button.id = (i * grid.length) + (j + 1)
@@ -199,6 +214,7 @@
             }
         }
 
+        // re-render the grid in the DOM 
         function updateGridInDOM(grid) {
             for (let i = 0; i < grid.length; i++) {
                 for (let j = 0; j < grid.length; j++) {
@@ -213,14 +229,11 @@
             }
         }
 
+        
+
         // also display high-score. This can be persisted with local storage
 
-        // check if snake got apple
-        // if got apple then add piece to snake's body and to apple score
-
         // when game is over display game over message with score and allow the user to press restart
-
-        // display intro message when the game starts
 
         // different difficulty modes: eg. change speed, obstacles, etc.
 
@@ -263,11 +276,11 @@
                 let nextHeadPositionIsValid = checkIfNextHeadPositionIsValid(nextHeadPosition, gridWithSnakeAndApple)
 
                 if (nextHeadPositionIsValid == false) {
-                    numberOfApples = 0
                     let score = document.getElementById('current-score')
                     score.textContent = ''
                     clearInterval(intervalId)
                     endGame(numberOfApples)
+                    numberOfApples = 0
                 }
                 else {
                     numberOfApples = appleCounter(nextHeadPosition, gridWithSnakeAndApple, numberOfApples)
