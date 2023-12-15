@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snake</title>
+    <link rel="stylesheet" href="./main.css">
 </head>
 
 <body>
@@ -165,7 +166,19 @@
         function constructGridInDOM(grid) {
             let body = document.querySelector("body")
             for (let i = 0; i < grid.length; i++) {
-                let div = document.createElement("div")
+                let outerDiv = document.createElement("div")
+                outerDiv.style.backgroundColor = "gray"
+                body.appendChild(outerDiv)
+                for (let j = 0; j < grid.length; j++) {
+                    let innerDiv = document.createElement("button")
+                    innerDiv.style.backgroundColor = "blue"
+                    if (grid[i][j] === " ") {
+                        innerDiv.innerHTML = "&nbsp;"
+                    } else {
+                        innerDiv.innerHTML = grid[i][j]
+                    }
+                    outerDiv.appendChild(innerDiv)
+                }
             }
 
         }
@@ -215,12 +228,10 @@
             let snakeCoordinates = createSnakeCords(n)
             let gridWithSnake = placeSnakeOnGrid(grid, snakeCoordinates)
             let gridWithSnakeAndApple = placeAppleOnGrid(gridWithSnake)
+            constructGridInDOM(gridWithSnakeAndApple)
 
             let intervalId = setInterval(() => {
-                
-                
-                
-
+            
                 let nextHeadPosition = checkNextHeadPosition(gridWithSnakeAndApple, snakeCoordinates, keyPressed)
 
                 let nextHeadPositionIsValid = checkIfNextHeadPositionIsValid(nextHeadPosition, gridWithSnakeAndApple)
@@ -239,7 +250,7 @@
                         gridWithSnakeAndApple = placeAppleOnGrid(gridWithSnake)
                     }
                     console.log(gridWithSnakeAndApple)
-                    constructGridInDOM(gridWithSnakeAndApple)
+                    // updateGridInDOM(gridWithSnakeAndApple)
                 }
 
             }, 2000)

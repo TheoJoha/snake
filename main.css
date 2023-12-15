@@ -1,0 +1,12 @@
+div {
+    margin: 10px;
+    height: 50px;
+    width: 500px;
+    style: flex;
+}
+
+button {
+    height: 30px;
+    width: 30px;
+}
+
