@@ -9,19 +9,24 @@
 </head>
 
 <body>
-    <h1>SNAKE</h1>
-    <div id="current-score-div">
-        <p>Current score:</p>
-        <p id="current-score"></p>
-        <div id="restart-game">
-            <p>Start Game</p>
+
+    <div id="game-container">
+        <h1>SNAKE</h1>
+        <div id="above-game-info-container">
+            <div id="current-score-div" class="above-game-info-div">
+                <p>Current score:</p>
+                <p id="current-score"></p>
+            </div>
+            <div id="restart-game" class="above-game-info-div">
+                <p>Start Game</p>
+            </div>
+            <div id="results" class="above-game-info-div">
+                <p id="results-paragraph">Results:</p>
+                <p id="results-paragraph"></p>
+            </div>
         </div>
-        <div id="results">
-            <p id="results-paragraph">Results:</p>
-            <p id="results-paragraph"></p>
-        </div>
+        <div id="placement-div"></div>
     </div>
-    <div id="placement-div"></div>
     <script defer>
 
         // restart button
@@ -29,7 +34,6 @@
         startButton.addEventListener("click", () => {
             main()
         })
-
 
         // generate a grid
         function createGrid(n) {
@@ -50,7 +54,6 @@
             let headPosition = (n - 1) / 2
             let snakeCooridnates = [[headPosition, headPosition], [headPosition + 1, headPosition], [headPosition + 2, headPosition]]
             return snakeCooridnates
-
         }
 
         // place snake on the grid
@@ -245,10 +248,13 @@
         // different difficulty modes: eg. change speed, obstacles, etc.
 
         function main() {
-            let n;
+            let n = 11
             let numberOfApples = 0
             let nextIsApple = false;
             let keyPressed = 'up';
+            let nextHeadPositionIsValid = true
+
+            // make game controllable by arrow-keys
             document.addEventListener("keydown", (e) => {
                 console.log(e.key)
                 if (e.key == "ArrowLeft") {
@@ -265,17 +271,23 @@
                 }
             })
 
-            n = 11
+            // if grid exists then update if not then create it
+            grid = createGrid(n)
 
-            let grid = createGrid(n)
             let snakeCoordinates = createSnakeCords(n)
             let gridWithSnake = placeSnakeOnGrid(grid, snakeCoordinates)
             let gridWithSnakeAndApple = placeAppleOnGrid(gridWithSnake)
-            constructGridInDOM(gridWithSnakeAndApple)
+            // check if grid in DOM exists and if not then construct it
+            let placementDiv = document.getElementById("placement-div")
+            if (!placementDiv.firstChild) {
+                // It has at least one
+                constructGridInDOM(gridWithSnakeAndApple)
+            }
+
 
             let intervalId = setInterval(() => {
 
-                let nextHeadPosition = checkNextHeadPosition(gridWithSnakeAndApple, snakeCoordinates, keyPressed)
+                nextHeadPosition = checkNextHeadPosition(gridWithSnakeAndApple, snakeCoordinates, keyPressed)
 
                 let nextHeadPositionIsValid = checkIfNextHeadPositionIsValid(nextHeadPosition, gridWithSnakeAndApple)
 
@@ -300,7 +312,6 @@
             }, 1000)
         }
 
-        main()
     </script>
 </body>
 

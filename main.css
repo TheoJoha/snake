@@ -1,7 +1,11 @@
+* {
+    background-color: gray;
+}
+
 div {
     height: 40px;
     width: 400px;
-    style: flex;
+    
 }
 
 button {
@@ -9,20 +13,45 @@ button {
     width: 30px;
 }
 
-#current-score-div {
+p {
+    background-color: inherit;
+    padding: 2px;
+}
+
+#game-container {
+    style: flex;
+    align-items: center;
+}
+
+.above-game-info-div {
+    margin: 5px;
+}
+
+#above-game-info-container {
     display: flex;
 }
 
 #restart-game {
     background-color: yellow;
-    width: 60px;
-    height: 40px;
+    width: 100px;
+    height: 80px;
     border: solid black 2px;
 }
 
 #results {
     background-color: orange;
-    width: 60px;
-    height: 40px;
+    width: 100px;
+    height: 80px;
     border: solid black 2px;
+}
+
+#current-score-div {
+    background-color: cyan;
+    width: 100px;
+    height: 80px;
+    border: solid black 2px;
+}
+
+#placement-div {
+    margin-top: 100px;
 }
