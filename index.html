@@ -10,6 +10,10 @@
 
 <body>
     <h1>SNAKE</h1>
+    <div>
+        <p>Current score:</p>
+        <p id="current-score"></p>
+    </div>
     <script>
 
         // generate a grid
@@ -43,10 +47,14 @@
         }
 
         // update snake on the grid
-        function updateSnakeOnGrid(grid, snakeCords, nextHead) {
+        function updateSnakeOnGrid(grid, snakeCords, nextHead, nextIsApple) {
 
-            grid[nextHead[0]][nextHead[1]] = 'o'
-            grid[snakeCords[snakeCords.length - 1][0]][snakeCords[snakeCords.length - 1][1]] = ' '
+            if (nextIsApple === false) {
+                grid[nextHead[0]][nextHead[1]] = 'o'
+                grid[snakeCords[snakeCords.length - 1][0]][snakeCords[snakeCords.length - 1][1]] = ' '
+            } else {
+                grid[nextHead[0]][nextHead[1]] = 'o'
+            }
 
             return grid
         }
@@ -71,8 +79,13 @@
         }
 
         // move snake function
-        function moveSnake(nextPosition, snakeCoordinates) {
-            let newSnakeCoordinates = snakeCoordinates.slice(0, -1)
+        function moveSnake(nextPosition, snakeCoordinates, nextIsApple) {
+            let newSnakeCoordinates
+            if (nextIsApple === false) {
+                newSnakeCoordinates = snakeCoordinates.slice(0, -1)
+            } else {
+                newSnakeCoordinates = snakeCoordinates.slice()
+            }
             newSnakeCoordinates.unshift(nextPosition)
             return newSnakeCoordinates
         }
@@ -80,6 +93,9 @@
         function appleCounter(nextHeadPosition, gridWithSnakeAndApple, numberOfApples) {
             if (gridWithSnakeAndApple[nextHeadPosition[0]][nextHeadPosition[1]] == 'a') {
                 console.log(numberOfApples + 1)
+                let score = document.getElementById('current-score')
+                score.textContent = `${numberOfApples + 1}`
+                console.log(score.textContent)
                 return numberOfApples + 1
             }
             return numberOfApples
@@ -92,8 +108,8 @@
             return false
         }
 
-        function endGame() {
-            alert("Game has ended!")
+        function endGame(numberOfApples) {
+            alert(`Game has ended! High-score: ${numberOfApples}`)
         }
 
         function checkNextHeadPosition(gridWithSnakeAndApple, snakeCoordinates, keyPressed) {
@@ -126,7 +142,7 @@
                         nextHead = [snakeCoordinates[0][0], snakeCoordinates[0][1] - 1]
                     } else {
                         nextHead = [snakeCoordinates[0][0], snakeCoordinates[0][1] + 1]
-                    }           
+                    }
                 }
 
                 return nextHead;
@@ -186,8 +202,8 @@
         function updateGridInDOM(grid) {
             for (let i = 0; i < grid.length; i++) {
                 for (let j = 0; j < grid.length; j++) {
-                   let button = document.getElementById(`${(i * grid.length) + (j + 1)}`)
-                   if (grid[i][j] === " ") {
+                    let button = document.getElementById(`${(i * grid.length) + (j + 1)}`)
+                    if (grid[i][j] === " ") {
                         button.innerHTML = "&nbsp;"
                     } else {
 
@@ -197,12 +213,8 @@
             }
         }
 
-        // display apple score
         // also display high-score. This can be persisted with local storage
 
-        // tick one step
-        // check for any arrow-keydown events
-        // check if snake is running into wall or own body -> end game
         // check if snake got apple
         // if got apple then add piece to snake's body and to apple score
 
@@ -216,22 +228,22 @@
             let n;
             let numberOfApples = 0
             let nextIsApple = false;
-            var keyPressed = 'up';
+            let keyPressed = 'up';
             document.addEventListener("keydown", (e) => {
-                    console.log(e.key)
-                    if (e.key == "ArrowLeft") {
-                        keyPressed = "left"
-                    }
-                    else if (e.key == "ArrowRight") {
-                        keyPressed = "right"
-                    }
-                    else if (e.key == "ArrowUp") {
-                        keyPressed = "up"
-                    }
-                    else if (e.key == "ArrowDown") {
-                        keyPressed = "down"
-                    }
-                })
+                console.log(e.key)
+                if (e.key == "ArrowLeft") {
+                    keyPressed = "left"
+                }
+                else if (e.key == "ArrowRight") {
+                    keyPressed = "right"
+                }
+                else if (e.key == "ArrowUp") {
+                    keyPressed = "up"
+                }
+                else if (e.key == "ArrowDown") {
+                    keyPressed = "down"
+                }
+            })
             while (true) {
                 n = prompt("Input an uneven number between 10 and 20, inclusive, to choose the size of grid: ")
                 if (n >= 10 && n <= 20 && n % 2 != 0) {
@@ -245,29 +257,30 @@
             constructGridInDOM(gridWithSnakeAndApple)
 
             let intervalId = setInterval(() => {
-            
+
                 let nextHeadPosition = checkNextHeadPosition(gridWithSnakeAndApple, snakeCoordinates, keyPressed)
 
                 let nextHeadPositionIsValid = checkIfNextHeadPositionIsValid(nextHeadPosition, gridWithSnakeAndApple)
 
                 if (nextHeadPositionIsValid == false) {
-
+                    numberOfApples = 0
+                    let score = document.getElementById('current-score')
+                    score.textContent = ''
                     clearInterval(intervalId)
-                    endGame()
+                    endGame(numberOfApples)
                 }
                 else {
                     numberOfApples = appleCounter(nextHeadPosition, gridWithSnakeAndApple, numberOfApples)
                     nextIsApple = checkIfNextIsApple(nextHeadPosition, gridWithSnakeAndApple)
-                    gridWithSnake = updateSnakeOnGrid(gridWithSnakeAndApple, snakeCoordinates, nextHeadPosition)
-                    snakeCoordinates = moveSnake(nextHeadPosition, snakeCoordinates)
+                    gridWithSnake = updateSnakeOnGrid(gridWithSnakeAndApple, snakeCoordinates, nextHeadPosition, nextIsApple)
+                    snakeCoordinates = moveSnake(nextHeadPosition, snakeCoordinates, nextIsApple)
                     if (nextIsApple) {
                         gridWithSnakeAndApple = placeAppleOnGrid(gridWithSnake)
                     }
-                    console.log(gridWithSnakeAndApple)
                     updateGridInDOM(gridWithSnakeAndApple)
                 }
 
-            }, 2000)
+            }, 1000)
         }
 
         main()
