@@ -56,7 +56,6 @@
                 let randomposition = randomPositionOnAGrid(sizeOfGrid)
                 if (grid[randomposition[0]][randomposition[1]] == " ") {
                     grid[randomposition[0]][randomposition[1]] = "a"
-                    console.log(grid)
                     return grid
                 }
             }
@@ -72,14 +71,13 @@
         // move snake function
         function moveSnake(nextPosition, snakeCoordinates) {
             let newSnakeCoordinates = snakeCoordinates.slice(0, -1)
-            console.log(newSnakeCoordinates)
             newSnakeCoordinates.unshift(nextPosition)
-            console.log(newSnakeCoordinates)
             return newSnakeCoordinates
         }
 
         function appleCounter(nextHeadPosition, gridWithSnakeAndApple, numberOfApples) {
             if (gridWithSnakeAndApple[nextHeadPosition[0]][nextHeadPosition[1]] == 'a') {
+                console.log(numberOfApples + 1)
                 return numberOfApples + 1
             }
             return numberOfApples
@@ -97,21 +95,36 @@
         }
 
         function checkNextHeadPosition(gridWithSnakeAndApple, snakeCoordinates, keyPressed) {
-            console.log(gridWithSnakeAndApple, snakeCoordinates, keyPressed)
+            console.log(keyPressed)
             let nextHead;
-            if ((keyPressed == "left" || keyPressed == "right" || keyPressed == "up" || keyPressed == "down")) {
-                if (keyPressed == "left" && !(snakeCoordinates[0][0] == snakeCoordinates[1][0] + 1)) {
-                    nextHead = [snakeCoordinates[0][0] - 1, snakeCoordinates[0][1]]
-
+            if (keyPressed == "left" || keyPressed == "right" || keyPressed == "up" || keyPressed == "down") {
+                if (keyPressed == "left") {
+                    if (!(snakeCoordinates[0][0] == snakeCoordinates[1][0] + 1)) {
+                        nextHead = [snakeCoordinates[0][0] - 1, snakeCoordinates[0][1]]
+                    } else {
+                        nextHead = [snakeCoordinates[0][0] + 1, snakeCoordinates[0][1]]
+                    }
                 }
-                else if (keyPressed == "right" && !(snakeCoordinates[0][0] == snakeCoordinates[1][0] - 1)) {
-                    nextHead = [snakeCoordinates[0][0] + 1, snakeCoordinates[0][1]]
+                else if (keyPressed == "right") {
+                    if (!(snakeCoordinates[0][0] == snakeCoordinates[1][0] - 1)) {
+                        nextHead = [snakeCoordinates[0][0] + 1, snakeCoordinates[0][1]]
+                    } else {
+                        nextHead = [snakeCoordinates[0][0] - 1, snakeCoordinates[0][1]]
+                    }
                 }
-                else if (keyPressed == "up" && !(snakeCoordinates[0][1] == snakeCoordinates[1][1] + 1)) {
-                    nextHead = [snakeCoordinates[0][1], snakeCoordinates[0][1] - 1]
+                else if (keyPressed == "up") {
+                    if (!(snakeCoordinates[0][1] == snakeCoordinates[1][1] - 1)) {
+                        nextHead = [snakeCoordinates[0][1], snakeCoordinates[0][1] + 1]
+                    } else {
+                        nextHead = [snakeCoordinates[0][1], snakeCoordinates[0][1] - 1]
+                    }
                 }
-                else if (keyPressed == "down" && !(snakeCoordinates[0][1] == snakeCoordinates[1][1] + 1)) {
-                    nextHead = [snakeCoordinates[0][1], snakeCoordinates[0][1] + 1]
+                else if (keyPressed == "down") {
+                    if (!(snakeCoordinates[0][1] == snakeCoordinates[1][1] + 1)) {
+                        nextHead = [snakeCoordinates[0][1], snakeCoordinates[0][1] - 1]
+                    } else {
+                        nextHead = [snakeCoordinates[0][1], snakeCoordinates[0][1] + 1]
+                    }           
                 }
 
                 return nextHead;
@@ -120,7 +133,6 @@
                 // case 1
                 if (snakeCoordinates[0][0] == snakeCoordinates[1][0] - 1) {
                     nextHead = [snakeCoordinates[0][0] - 1, snakeCoordinates[0][1]]
-
                 }
                 // case 2
                 else if (snakeCoordinates[0][0] == snakeCoordinates[1][0] + 1) {
@@ -139,7 +151,6 @@
         }
 
         function checkIfNextHeadPositionIsValid(nextHeadPosition, gridWithSnakeAndApple) {
-            console.log(nextHeadPosition)
             if (nextHeadPosition[0] < 0 || nextHeadPosition[0] > gridWithSnakeAndApple.length - 1 ||
                 nextHeadPosition[1] < 0 || nextHeadPosition[1] > gridWithSnakeAndApple.length - 1) {
                 return false
@@ -148,6 +159,14 @@
                 return false
             }
             return true
+
+        }
+
+        function constructGridInDOM(grid) {
+            let body = document.querySelector("body")
+            for (let i = 0; i < grid.length; i++) {
+                let div = document.createElement("div")
+            }
 
         }
 
@@ -170,21 +189,9 @@
             let n;
             let numberOfApples = 0
             let nextIsApple = false;
-            while (true) {
-                n = prompt("Input an uneven number between 10 and 20, inclusive, to choose the size of grid: ")
-                if (n >= 10 && n <= 20 && n % 2 != 0) {
-                    break
-                }
-            }
-            let grid = createGrid(n)
-            let snakeCoordinates = createSnakeCords(n)
-            let gridWithSnake = placeSnakeOnGrid(grid, snakeCoordinates)
-            let gridWithSnakeAndApple = placeAppleOnGrid(gridWithSnake)
-            console.log(gridWithSnakeAndApple)
-
-            let intervalId = setInterval(() => {
-                let keyPressed;
-                window.addEventListener("keydown", (e) => {
+            var keyPressed = 'up';
+            document.addEventListener("keydown", (e) => {
+                    console.log(e.key)
                     if (e.key == "ArrowLeft") {
                         keyPressed = "left"
                     }
@@ -198,9 +205,23 @@
                         keyPressed = "down"
                     }
                 })
+            while (true) {
+                n = prompt("Input an uneven number between 10 and 20, inclusive, to choose the size of grid: ")
+                if (n >= 10 && n <= 20 && n % 2 != 0) {
+                    break
+                }
+            }
+            let grid = createGrid(n)
+            let snakeCoordinates = createSnakeCords(n)
+            let gridWithSnake = placeSnakeOnGrid(grid, snakeCoordinates)
+            let gridWithSnakeAndApple = placeAppleOnGrid(gridWithSnake)
 
-                let nextHeadPosition = checkNextHeadPosition(gridWithSnakeAndApple, snakeCoordinates, keyPressed = ' ')
-                console.log(nextHeadPosition)
+            let intervalId = setInterval(() => {
+                
+                
+                
+
+                let nextHeadPosition = checkNextHeadPosition(gridWithSnakeAndApple, snakeCoordinates, keyPressed)
 
                 let nextHeadPositionIsValid = checkIfNextHeadPositionIsValid(nextHeadPosition, gridWithSnakeAndApple)
 
@@ -210,7 +231,6 @@
                     endGame()
                 }
                 else {
-                    console.log(gridWithSnakeAndApple)
                     numberOfApples = appleCounter(nextHeadPosition, gridWithSnakeAndApple, numberOfApples)
                     nextIsApple = checkIfNextIsApple(nextHeadPosition, gridWithSnakeAndApple)
                     gridWithSnake = updateSnakeOnGrid(gridWithSnakeAndApple, snakeCoordinates, nextHeadPosition)
@@ -219,6 +239,7 @@
                         gridWithSnakeAndApple = placeAppleOnGrid(gridWithSnake)
                     }
                     console.log(gridWithSnakeAndApple)
+                    constructGridInDOM(gridWithSnakeAndApple)
                 }
 
             }, 2000)
