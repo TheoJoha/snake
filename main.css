@@ -18,9 +18,23 @@ p {
     padding: 2px;
 }
 
+#wrapper {
+    width: 100%;
+    height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+}
+
 #game-container {
-    style: flex;
+    padding: 50px;
+    display: flex;
     align-items: center;
+    width: 300px;
+    height: 700px;
+    flex-direction: column;
+    border: solid black 5px;
 }
 
 .above-game-info-div {
@@ -29,29 +43,58 @@ p {
 
 #above-game-info-container {
     display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    border: solid black 2px;
 }
 
 #restart-game {
     background-color: yellow;
-    width: 100px;
+    width: 33.3%;
     height: 80px;
     border: solid black 2px;
+    overflow:hidden;
 }
 
 #results {
     background-color: orange;
-    width: 100px;
+    width: 33.3%;
     height: 80px;
     border: solid black 2px;
+    overflow:hidden;
 }
 
 #current-score-div {
     background-color: cyan;
-    width: 100px;
+    width: 33.3%;
     height: 80px;
     border: solid black 2px;
+    overflow:hidden;
+    display: flex;
+    align-items: center;
+    text-align: center;
 }
 
 #placement-div {
-    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: solid black 2px;
 }
+
+#h1-div {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    border: solid black 2px;
+}
+
+/* h1 {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+} */
