@@ -41,6 +41,42 @@ p {
     margin: 5px;
 }
 
+#difficulty-button-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border: solid black 2px;
+}
+
+#easy {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: solid black 2px;
+    background-color: #CD7F32;
+}
+
+#medium {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: solid black 2px;
+    background-color: silver;
+}
+
+#hard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: solid black 2px;
+    background-color: gold;
+}
+
+#easy:hover, #medium:hover, #hard:hover {
+    background-color: bisque;
+}
+
 #above-game-info-container {
     display: flex;
     align-items: center;
@@ -69,6 +105,7 @@ p {
     background-color: cyan;
     width: 33.3%;
     height: 80px;
+    width: 200px;
     border: solid black 2px;
     overflow:hidden;
     display: flex;
@@ -76,12 +113,20 @@ p {
     text-align: center;
 }
 
+#restart-game:hover,
+#results:hover,
+#current-score-div:hover {
+    background-color: bisque;
+} 
+
 #placement-div {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     border: solid black 2px;
+    width: 100%;
+    height: 400px;
 }
 
 #h1-div {
@@ -92,9 +137,48 @@ p {
     border: solid black 2px;
 }
 
+.grid-square {
+    margin: 0;
+}
+
 /* h1 {
     display: flex;
     align-items: center;
     text-align: center;
     justify-content: center;
 } */
+
+#arrow-keys-container {
+    display: flex;
+    flex-direction: column;
+    border: solid blue 2px;
+    align-items: center;
+    justify-position: center;
+    width: 100%;
+    height: 90px;
+}
+
+#arrow-keys-top-row, 
+#arrow-keys-bottom-row {
+    display: flex;
+    flex-direction: row;
+    border: solid green 2px;
+    align-items: center;
+    justify-position: center;
+    width: 200px;
+    
+}
+
+.arrow-key {
+    height: 35px;
+    width: 50px;
+    border: solid red 2px;
+    background-color: transparent;
+    font-weight: bold;
+}
+
+#left-of-up,
+#right-of-up {
+    background-color: transparent;
+    border: none;
+}

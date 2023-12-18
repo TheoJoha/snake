@@ -51,8 +51,14 @@ function placeAppleOnGrid(grid) {
     let sizeOfGrid = grid.length - 1
     while (true) {
         let randomposition = randomPositionOnAGrid(sizeOfGrid)
-        if (grid[randomposition[0]][randomposition[1]] == " ") {
-            grid[randomposition[0]][randomposition[1]] = "a"
+        if (grid[randomposition[0]][randomposition[1]] == ' ') {
+            grid[randomposition[0]][randomposition[1]] = 'a'
+            // also color DOM-grid if it exists
+            let div = document.getElementById(`${randomposition[0] * grid.length + randomposition[1] + 1}`)
+
+            if (div !== null) {
+                div.style.backgroundColor = "red"
+            }
             return grid
         }
     }
@@ -80,10 +86,19 @@ function moveSnake(nextPosition, snakeCoordinates, nextIsApple) {
 // add one point if next is an apple
 function appleCounter(nextHeadPosition, gridWithSnakeAndApple, numberOfApples) {
     if (gridWithSnakeAndApple[nextHeadPosition[0]][nextHeadPosition[1]] == 'a') {
-        console.log(numberOfApples + 1)
         let score = document.getElementById('current-score')
         score.textContent = `${numberOfApples + 1}`
-        console.log(score.textContent)
+
+        // check if current-score is higher than high-score
+        let highScore = Number(localStorage.getItem("highScore"));
+        if (highScore || highScore >= 0) {
+            if (numberOfApples + 1 > (highScore)) {
+                highScore = numberOfApples + 1
+                localStorage.setItem('highScore', `${highScore}`)
+                let highScoreParagraph = document.getElementById('high-score')
+                highScoreParagraph.textContent = `${highScore}`
+            }
+        }
         return numberOfApples + 1
     }
     return numberOfApples
@@ -100,12 +115,30 @@ function checkIfNextIsApple(nextHeadPosition, gridWithSnakeAndApple) {
 // end the game
 function endGame(numberOfApples) {
     let resultsParagraph = document.getElementById("results-paragraph")
-    resultsParagraph.textContent = `Game has ended! Score: ${numberOfApples}`
+    resultsParagraph.textContent = `Score: ${numberOfApples}`
 }
 
+// set high-score
+function setHighScore() {
+    let highScoreParaggraph = document.getElementById("high-score")
+    let highScore = localStorage.getItem('highScore')
+    if (highScore) {
+        highScoreParaggraph.textContent = `${highScore}`
+    } else {
+        localStorage.setItem('highScore', '0')
+        highScoreParaggraph.textContent = '0'
+    }
+}
+
+// disable scrolling by arrow-keys
+window.addEventListener("keydown", function(e) {
+    if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
+        e.preventDefault();
+    }
+}, false);
+
 // check which cell the snake's head will move to next
-function checkNextHeadPosition(gridWithSnakeAndApple, snakeCoordinates, keyPressed) {
-    console.log(keyPressed)
+function checkNextHeadPosition(snakeCoordinates, keyPressed) {
     let nextHead;
     if (keyPressed == "left" || keyPressed == "right" || keyPressed == "up" || keyPressed == "down") {
         if (keyPressed == "up") {
@@ -182,10 +215,17 @@ function constructGridInDOM(grid) {
         for (let j = 0; j < grid.length; j++) {
             let button = document.createElement("button")
             button.id = (i * grid.length) + (j + 1)
-            button.style.backgroundColor = "blue"
+            button.class = "grid-square"
+            // if space then blue, if apple then red, and if snake then green
             if (grid[i][j] === " ") {
+                button.style.backgroundColor = "blue"
                 button.innerHTML = "&nbsp;"
-            } else {
+            } else if (grid[i][j] === 'a') {
+                button.style.backgroundColor = "red"
+                button.innerHTML = grid[i][j]
+            }
+            else {
+                button.style.backgroundColor = "green"
                 button.innerHTML = grid[i][j]
             }
             outerDiv.appendChild(button)
@@ -200,24 +240,42 @@ function updateGridInDOM(grid) {
             let button = document.getElementById(`${(i * grid.length) + (j + 1)}`)
             if (grid[i][j] === " ") {
                 button.innerHTML = "&nbsp;"
-            } else {
-
+                button.style.backgroundColor = "blue"
+            } else if (grid[i][j] === 'a') {
                 button.innerHTML = grid[i][j]
+                button.style.backgroundColor = "red"
+            } else {
+                button.innerHTML = grid[i][j]
+                button.style.backgroundColor = "green"
             }
         }
     }
 }
 
+// allow the user to change level of difficulty
+document.getElementById('easy').addEventListener("click", () => {
+    localStorage.setItem("difficulty", "1000")
+    timeBetweenTicks = 1000
+})
+document.getElementById('medium').addEventListener("click", () => {
+    localStorage.setItem("difficulty", "650")
+    timeBetweenTicks = 650
+})
+document.getElementById('hard').addEventListener("click", () => {
+    localStorage.setItem("difficulty", "300")
+    timeBetweenTicks = 300
+})
+
 function main() {
-    let n = 11
+    let gridSize = 11
     let numberOfApples = 0
     let nextIsApple = false;
     let keyPressed = 'up';
-    let nextHeadPositionIsValid = true
+    let timeBetweenTicks = Number(localStorage.getItem("difficulty")) || 1000
+    console.log(timeBetweenTicks)
 
     // make game controllable by arrow-keys
     document.addEventListener("keydown", (e) => {
-        console.log(e.key)
         if (e.key == "ArrowLeft") {
             keyPressed = "left"
         }
@@ -233,9 +291,12 @@ function main() {
     })
 
     // if grid exists then update if not then create it
-    grid = createGrid(n)
+    grid = createGrid(gridSize)
 
-    let snakeCoordinates = createSnakeCords(n)
+    // set high-score
+    setHighScore()
+
+    let snakeCoordinates = createSnakeCords(gridSize)
     let gridWithSnake = placeSnakeOnGrid(grid, snakeCoordinates)
     let gridWithSnakeAndApple = placeAppleOnGrid(gridWithSnake)
     // check if grid in DOM exists and if not then construct it
@@ -248,7 +309,7 @@ function main() {
 
     let intervalId = setInterval(() => {
 
-        nextHeadPosition = checkNextHeadPosition(gridWithSnakeAndApple, snakeCoordinates, keyPressed)
+        let nextHeadPosition = checkNextHeadPosition(snakeCoordinates, keyPressed)
 
         let nextHeadPositionIsValid = checkIfNextHeadPositionIsValid(nextHeadPosition, gridWithSnakeAndApple)
 
@@ -270,5 +331,5 @@ function main() {
             updateGridInDOM(gridWithSnakeAndApple)
         }
 
-    }, 1000)
+    }, timeBetweenTicks)
 }
