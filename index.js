@@ -274,7 +274,7 @@ function main() {
     let timeBetweenTicks = Number(localStorage.getItem("difficulty")) || 1000
     console.log(timeBetweenTicks)
 
-    // make game controllable by arrow-keys
+    // make game controllable by keyboard arrow-keys
     document.addEventListener("keydown", (e) => {
         if (e.key == "ArrowLeft") {
             keyPressed = "left"
@@ -288,6 +288,16 @@ function main() {
         else if (e.key == "ArrowDown") {
             keyPressed = "down"
         }
+    })
+
+    // make game controllable by arrow-keys on screen
+    document.getElementById("arrow-keys-container").addEventListener("click", (e) => {
+        console.log(e.target.id)
+        // if (e.target.id == "up") console.log("YES")
+        if (e.target.id === "up") keyPressed = "up"
+        if (e.target.id === "left") keyPressed = "left"
+        if (e.target.id === "right") keyPressed = "right"
+        if (e.target.id === "down") keyPressed = "down"
     })
 
     // if grid exists then update if not then create it

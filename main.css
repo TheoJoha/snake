@@ -25,6 +25,7 @@ p {
   align-items: center;
   justify-content: center;
   background-color: transparent;
+  
 }
 
 #game-container {
@@ -151,7 +152,6 @@ p {
 #arrow-keys-container {
     display: flex;
     flex-direction: column;
-    border: solid blue 2px;
     align-items: center;
     justify-position: center;
     width: 100%;
@@ -162,7 +162,6 @@ p {
 #arrow-keys-bottom-row {
     display: flex;
     flex-direction: row;
-    border: solid green 2px;
     align-items: center;
     justify-position: center;
     width: 200px;
@@ -172,9 +171,16 @@ p {
 .arrow-key {
     height: 35px;
     width: 50px;
-    border: solid red 2px;
-    background-color: transparent;
+    background-color: yellow;
     font-weight: bold;
+    margin: 2px;
+}
+
+#up:hover,
+#left:hover,
+#right:hover,
+#down:hover {
+    background-color: bisque;
 }
 
 #left-of-up,
